@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - Блог{% endblock %}
+
+{% block content %}
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+    <small>Автор: {{ author.login if author else "Неизвестен" }} (ID: {{ post.authorId }}), создан: {{ post.createdAt }}, обновлён: {{ post.updatedAt }}</small>
+
+    <div style="margin-top: 20px;">
+        <a href="/">← Назад к списку</a> |
+        <a href="/edit-post/{{ post.id }}">Редактировать</a>
+    </div>
+{% endblock %}

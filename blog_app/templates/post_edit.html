@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Редактировать пост - Блог{% endblock %}
+
+{% block content %}
+    <h2>Редактировать пост "{{ post.title }}"</h2>
+
+    <form method="post" action="/edit-post/{{ post.id }}">
+        <label for="authorId">ID автора:</label><br>
+        <input type="number" id="authorId" name="authorId" value="{{ post.authorId }}" required><br><br>
+
+        <label for="title">Заголовок:</label><br>
+        <input type="text" id="title" name="title" value="{{ post.title }}" required style="width: 100%;"><br><br>
+
+        <label for="content">Содержание:</label><br>
+        <textarea id="content" name="content" required style="width: 100%; height: 150px;">{{ post.content }}</textarea><br><br>
+
+        <input type="submit" value="Сохранить изменения">
+    </form>
+
+    <div style="margin-top: 20px;">
+        <a href="/post/{{ post.id }}">← Назад к посту</a> |
+        <a href="/">← К списку постов</a>
+    </div>
+{% endblock %}

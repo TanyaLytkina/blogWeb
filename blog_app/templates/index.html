@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - Блог{% endblock %}
+
+{% block content %}
+    <h2>Все посты</h2>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <h3><a href="/post/{{ post.id }}">{{ post.title }}</a></h3>
+                <p>{{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}</p>
+                <small>Автор: {{ post.authorId }}, создан: {{ post.createdAt }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Постов пока нет.</p>
+    {% endif %}
+{% endblock %}
