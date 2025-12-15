@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Профиль: {{ user.login }}</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-center mb-4">
+            <img id="avatar-preview"
+                 src="{{ '/static/uploads/' ~ request.session.get('avatar') if request.session.get('avatar') else '/static/img/default-avatar.png' }}"
+                 class="rounded-circle mt-3" style="width:120px;height:120px;object-fit:cover;">
+            <div class="card-body">
+                <h5>@{{ user.login }}</h5>
+                <p class="text-muted">{{ user.role }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Аватарочка</div>
+            <div class="card-body">
+                <form id="avatar-form" enctype="multipart/form-data">
+                    <input type="file" name="file" accept="image/*" class="form-control mb-2" required>
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Загрузить фоточку</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Настроечки</div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3"><label>Email</label><input name="email" value="{{ user.email }}" class="form-control" required></div>
+                    <div class="mb-3"><label>Новый пароль (оставьте пустым)</label><input type="password" name="password" class="form-control" minlength="4"></div>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">Избранное</div>
+            <div class="card-body">
+                <p id="saved-info">Загрузка...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const saved = JSON.parse(localStorage.getItem("saved_posts") || "[]");
+      document.getElementById("saved-info").textContent =
+        saved.length ? `Сохранено: ${saved.length} пост(ов)` : "Пока ничего нет";
+    });
+</script>
+{% endblock %}

@@ -1,14 +1,22 @@
 {% extends "base.html" %}
-
-{% block title %}{{ post.title }} - Блог{% endblock %}
-
 {% block content %}
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.content }}</p>
-    <small>Автор: {{ author.login if author else "Неизвестен" }} (ID: {{ post.authorId }}), создан: {{ post.createdAt }}, обновлён: {{ post.updatedAt }}</small>
-
-    <div style="margin-top: 20px;">
-        <a href="/">← Назад к списку</a> |
-        <a href="/edit-post/{{ post.id }}">Редактировать</a>
+<div class="card mb-4">
+    <div class="card-body">
+        <h1>{{ post.title }}</h1>
+        <div class="text-muted mb-3">Автор постика: <strong>{{ author.login if author else '??' }}</strong> • {{ post.createdAt.strftime('%Y-%m-%d %H:%M') }}</div>
+        <div class="post-content">{{ content_html|safe }}</div>
     </div>
+</div>
+
+<div class="d-flex gap-2 mb-4">
+    <button onclick="toggleSaved({{ post.id }})" id="save-btn-{{ post.id }}" class="btn btn-outline-secondary">☆ Сохрани постик</button>
+    {% if user %}
+    {% if user.id == post.authorId or user.role == 'admin' %}
+    <a href="/edit-post/{{ post.id }}" class="btn btn-warning">✏️ Редактировать постик</a>
+    <button onclick="deletePost({{ post.id }})" class="btn btn-danger">🗑️ Удалить постик</button>
+    {% endif %}
+    {% endif %}
+</div>
+
+
 {% endblock %}
