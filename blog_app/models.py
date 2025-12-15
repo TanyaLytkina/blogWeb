@@ -1,41 +1,50 @@
 from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel, validator
+from typing import Optional
+from pydantic import BaseModel, Field, validator, EmailStr
 
-class User(BaseModel):
-    id: int
-    email: str
-    login: str
-    password: str
-    createdAt: datetime = datetime.now()
-    updatedAt: datetime = datetime.now()
-
-    @validator('email')
-    def validate_email(cls, v):
-        if '@' not in v:
-            raise ValueError('Invalid email address')
-        return v
-
-class Post(BaseModel):
-    id: int
-    authorId: int
-    title: str
-    content: str
-    createdAt: datetime = datetime.now()
-    updatedAt: datetime = datetime.now()
 
 class UserCreate(BaseModel):
-    email: str
+    email: EmailStr
     login: str
     password: str
+
+    @validator('login')
+    def login_must_be_simple(cls, v):
+        if ' ' in v:
+            raise ValueError('Login cannot contain spaces')
+        return v
+
 
 class PostCreate(BaseModel):
     authorId: int
     title: str
     content: str
 
-class UserResponse(User):
-    pass
 
-class PostResponse(Post):
-    pass
+class User(BaseModel):
+    id: int
+    email: str
+    login: str
+    password: str
+    role: str = "user"
+    createdAt: datetime = Field(alias="created_at", default_factory=datetime.now)
+    updatedAt: datetime = Field(alias="updated_at", default_factory=datetime.now)
+
+    model_config = {
+        "populate_by_name": True,
+        "from_attributes": True,
+    }
+
+
+class Post(BaseModel):
+    id: int
+    authorId: int = Field(alias="author_id")
+    title: str
+    content: str
+    createdAt: datetime = Field(alias="created_at", default_factory=datetime.now)
+    updatedAt: datetime = Field(alias="updated_at", default_factory=datetime.now)
+
+    model_config = {
+        "populate_by_name": True,
+        "from_attributes": True,
+    }

@@ -1,3 +1,8 @@
-# Default ignored files
-/shelf/
-/workspace.xml
+__pycache__/
+*.pyc
+.env
+blog.db
+static/uploads/
+.DS_Store
+.venv/
+venv/
