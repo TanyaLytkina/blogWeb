@@ -1,39 +1,22 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="{{ request.session.get('theme', 'light') }}">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyBlog</title>
-    <link rel="icon" type="image/png" href="/static/img/icon-192.png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="manifest" href="/static/manifest.json">
-    <meta name="theme-color" content="#0d6efd">
+    <title>{% block title %}Блог{% endblock %}</title>
+    
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="/">MyBlog</a>
-        <div class="d-flex align-items-center gap-2">
-            {% if user %}
-            <span class="d-none d-sm-inline">Привета, {{ user.login }}!</span>
-            <a href="/profile" class="btn btn-sm btn-outline-secondary">Тут твой профиль</a>
-            <a href="/create-post" class="btn btn-sm btn-outline-primary">Тут можешь пост создать</a>
-            <a href="/saved" class="btn btn-sm btn-outline-warning">⭐ Избранное</a>
-            <a href="/logout" class="btn btn-sm btn-outline-danger">Можешь выйти, если хочешь</a>
-            {% else %}
-            <a href="/login" class="btn btn-sm btn-outline-primary">Заходи к нам</a>
-            <a href="/register" class="btn btn-sm btn-primary">Если впервые, велком на регистрацию</a>
-            {% endif %}
-            <button id="theme-toggle" class="btn btn-sm btn-outline-secondary">Темка</button>
-        </div>
+        <header>
+            <h1><a href="/">Мой Блог</a></h1>
+            <nav>
+                <a href="/">Главная</a> | <a href="/create-post">Новый пост</a>
+            </nav>
+        </header>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        
     </div>
-</nav>
-
-<div class="container mt-4">
-    {% block content %}{% endblock %}
-</div>
-
-<script src="/static/js/main.js"></script>
 </body>
 </html>

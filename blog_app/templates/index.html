@@ -1,42 +1,19 @@
 {% extends "base.html" %}
+
+{% block title %}Главная - Блог{% endblock %}
+
 {% block content %}
-<h2>Список постиков</h2>
+    <h2>Все посты</h2>
 
-<form class="mb-3" method="GET">
-    <div class="input-group">
-        <input type="text" name="q" class="form-control" placeholder="Какой постик хочешь найти?" value="{{ q }}">
-        <button class="btn btn-outline-secondary">🔍</button>
-    </div>
-</form>
-
-{% for post in posts %}
-<div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">{{ post.title }}</h5>
-        <p class="card-text">{{ post.content[:120] ~ ('…' if post.content|length > 120 else '') }}</p>
-        <a href="/post/{{ post.id }}" class="btn btn-primary">Прочитай постик</a>
-        <button onclick="toggleSaved({{ post.id }})" id="save-btn-{{ post.id }}" class="btn btn-outline-secondary">☆ Сохрани постик</button>
-        {% if user and (user.id == post.authorId or user.role == 'admin') %}
-        <a href="/edit-post/{{ post.id }}" class="btn btn-outline-warning">✏️</a>
-        <button onclick="deletePost({{ post.id }})" class="btn btn-outline-danger">🗑️</button>
-        {% endif %}
-    </div>
-    <div class="card-footer text-muted">
-        Автор постика: {{ get_user(post.authorId).login if get_user(post.authorId) else '??' }} •
-        {{ post.createdAt.strftime('%Y-%m-%d %H:%M') }}
-    </div>
-</div>
-{% endfor %}
-
-{% if not q and pages > 1 %}
-<nav>
-    <ul class="pagination">
-        {% for p in range(1, pages+1) %}
-        <li class="page-item {% if p == page %}active{% endif %}">
-            <a class="page-link" href="/?page={{ p }}">{{ p }}</a>
-        </li>
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <h3><a href="/post/{{ post.id }}">{{ post.title }}</a></h3>
+                <p>{{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}</p>
+                <small>Автор: {{ post.authorId }}, создан: {{ post.createdAt }}</small>
+            </div>
         {% endfor %}
-    </ul>
-</nav>
-{% endif %}
+    {% else %}
+        <p>Постов пока нет.</p>
+    {% endif %}
 {% endblock %}
