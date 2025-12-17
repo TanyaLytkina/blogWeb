@@ -6,7 +6,7 @@ from blog_app.models import PostCreate, UserCreate
 
 @pytest.fixture
 def init_db():
-    # очистка БД перед каждым тестом
+
     conn = crud.get_db()
     conn.execute("DELETE FROM posts")
     conn.execute("DELETE FROM users")
