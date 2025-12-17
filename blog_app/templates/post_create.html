@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Создать постик</h2>
+<form method="POST">
+    <div class="mb-3"><label>Заголовочек</label><input name="title" class="form-control" required></div>
+    <div class="mb-3">
+        <label>Пиши, что хочешь</label>
+        <textarea name="content" class="form-control" rows="8" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Опубликовываю</button>
+    <a href="/" class="btn btn-outline-secondary">Не опубликовываю, отмена</a>
+</form>
+{% endblock %}

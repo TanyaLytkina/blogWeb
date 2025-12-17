@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container fade-in-up">
+    <div class="profile-grid">
+        <div class="card text-center">
+            <h2>✍️ Новый пост</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">Заголовок поста</label>
+                <input type="text" id="title" name="title" class="form-control"
+                       value="{{ title or '' }}" required maxlength="200">
+            </div>
+
+            <div class="form-group">
+                <label for="content">Содержание</label>
+                <textarea id="content" name="content" rows="15" class="form-control"
+                          required>{{ content or '' }}</textarea>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end">
+                <a href="/" class="btn btn-secondary">❌ Отмена</a>
+                <button type="submit" class="btn btn-primary">✅ Опубликовать</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

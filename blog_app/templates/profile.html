@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Профиль: {{ user.login }}</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-center mb-4">
+            <img
+                    id="avatar-preview"
+                    src="{{ '/static/uploads/' ~ request.session.get('avatar') if request.session.get('avatar') else '/static/img/default-avatar.png' }}"
+                    class="rounded-circle mt-3"
+                    style="width:120px;height:120px;object-fit:cover;"
+            >
+            <div class="card-body">
+                <h5>@{{ user.login }}</h5>
+                <p class="text-muted">{{ user.role }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Аватарочка</div>
+            <div class="card-body">
+                <form id="avatar-form" enctype="multipart/form-data">
+                    <input type="file" name="file" accept="image/*" class="form-control mb-2" required>
+                    <button type="submit" class="btn btn-sm btn-outline-primary">Загрузить фоточку</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Настроечки</div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input name="email" value="{{ user.email }}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Новый пароль (оставьте пустым)</label>
+                        <input type="password" name="password" class="form-control" minlength="4">
+                    </div>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">⭐ Избранное</h5>
+                <span class="saved-count badge bg-primary rounded-pill px-3 py-2">
+          {{ saved_posts|length }}
+        </span>
+            </div>
+            <div class="card-body">
+                {% if saved_posts %}
+                <div class="saved-posts-grid">
+                    {% for item in saved_posts %}
+                    <div class="saved-post-card">
+                        <div class="saved-post-header">
+                            <h6 class="saved-post-title">{{ item.post.title }}</h6>
+                            <button
+                                    onclick="toggleSaved({{ item.post.id }})"
+                                    data-post-id="{{ item.post.id }}"
+                                    class="btn-favorite {{ 'active' if item.post.id|string in saved_ids else '' }}"
+                            >⭐</button>
+                        </div>
+                        <p class="saved-post-excerpt">
+                            {{ item.post.content[:100] ~ ('…' if item.post.content|length > 100 else '') }}
+                        </p>
+                        <div class="saved-post-meta">
+              <span class="saved-post-author">
+                Автор постика: <strong>{{ item.author.login }}</strong>
+              </span>
+                            <span class="saved-post-date">
+                {{ item.post.createdAt.strftime('%d.%m.%Y') }}
+              </span>
+                        </div>
+                        <div class="saved-post-actions">
+                            <a href="/post/{{ item.post.id }}" class="btn btn-view">Читать</a>
+                            {% if user.id == item.post.authorId or user.role == 'admin' %}
+                            <a href="/edit-post/{{ item.post.id }}" class="btn btn-edit">✏️</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="saved-empty-state">
+                    <div class="saved-icon">⭐</div>
+                    <p class="saved-text">
+                        Ничего не сохранено.<br>
+                        Нажмите <strong>☆ Сохранить</strong> на любом постике!
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("avatar-form");
+      if (!form) return;
+
+      form.addEventListener("submit", async e => {
+        e.preventDefault();
+        const fd = new FormData(form);
+        const res = await fetch("/upload-avatar", { method: "POST", body: fd });
+        const data = await res.json();
+        if (data.url) {
+          document.getElementById("avatar-preview").src = data.url;
+        } else {
+          alert("Ошибка: " + data.error);
+        }
+      });
+    });
+</script>
+{% endblock %}

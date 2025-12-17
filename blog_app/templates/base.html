@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="{{ request.session.get('theme', 'light') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBlog</title>
+    <link rel="icon" type="image/png" href="/static/img/icon-192.png">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/">MyBlog</a>
+        <div class="d-flex align-items-center gap-2">
+            {% if user %}
+            <span class="d-none d-sm-inline">Привета, {{ user.login }}!</span>
+            <a href="/profile" class="btn-profile">Тут твой профиль</a>
+            <a href="/create-post" class="btn-create-post">Тут можешь пост создать</a>
+            <a href="/logout" class="btn-logout">Можешь выйти</a>
+            {% else %}
+            <a href="/login" class="btn-login">Заходи к нам</a>
+            <a href="/register" class="btn-register">Велком на регистрацию</a>
+            {% endif %}
+            <button id="theme-toggle" class="btn btn-sm btn-outline-secondary">Темка</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<script src="/static/js/main.js"></script>
+
+<script>
+    async function toggleSaved(postId) {
+      let saved = JSON.parse(localStorage.getItem("saved_posts") || "[]");
+      const wasSaved = saved.includes(postId);
+      if (wasSaved) {
+        saved = saved.filter(id => id !== postId);
+      } else {
+        saved.push(postId);
+      }
+      localStorage.setItem("saved_posts", JSON.stringify(saved));
+
+      const formData = new FormData();
+      formData.append("post_id", postId);
+      formData.append("save", !wasSaved);
+      try {
+        const res = await fetch("/save-post-toggle", {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        document.querySelectorAll(".saved-count").forEach(el => {
+          el.textContent = data.saved_count;
+        });
+      } catch (e) {}
+
+      document.querySelectorAll(`[data-post-id="${postId}"]`).forEach(btn => {
+        btn.textContent = wasSaved ? "☆" : "⭐";
+        btn.classList.toggle("active", !wasSaved);
+      });
+    }
+</script>
+</body>
+</html>

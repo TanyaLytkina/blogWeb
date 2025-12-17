@@ -1,0 +1,13 @@
+{
+  "users": [],
+  "posts": [
+    {
+      "id": 1,
+      "authorId": 143,
+      "title": "new title",
+      "content": "new content",
+      "createdAt": "2025-10-21 12:30:44.673403",
+      "updatedAt": "2025-10-21 12:30:44.673410"
+    }
+  ]
+}
