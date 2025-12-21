@@ -1,13 +1,36 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Создать постик</h2>
-<form method="POST">
-    <div class="mb-3"><label>Заголовочек</label><input name="title" class="form-control" required></div>
-    <div class="mb-3">
-        <label>Пиши, что хочешь</label>
-        <textarea name="content" class="form-control" rows="8" required></textarea>
+<div class="container fade-in-up">
+    <div class="profile-grid">
+        <div class="card text-center">
+            <h2>Новый постик</h2>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Опубликовываю</button>
-    <a href="/" class="btn btn-outline-secondary">Не опубликовываю, отмена</a>
-</form>
+
+    <div class="card">
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="title">Заголовочек</label>
+                <input type="text" id="title" name="title" class="form-control"
+                       value="{{ title or '' }}" required maxlength="200">
+            </div>
+
+            <div class="form-group">
+                <label for="content">Пиши, что хочешь</label>
+                <textarea id="content" name="content" rows="15" class="form-control"
+                          required>{{ content or '' }}</textarea>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end">
+                <a href="/" class="btn btn-secondary">Не опубликовываю, отвмена</a>
+                <button type="submit" class="btn btn-primary">Опубликовываю</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
