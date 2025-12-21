@@ -15,6 +15,7 @@
         <a class="navbar-brand" href="/">MyBlog</a>
         <div class="d-flex align-items-center gap-2">
             {% if user %}
+            <a href="/search-users" class="btn btn-outline-primary btn-sm">Пользователи</a>
             <span class="d-none d-sm-inline">Привета, {{ user.login }}!</span>
             <a href="/profile" class="btn-profile">Тут твой профиль</a>
             <a href="/create-post" class="btn-create-post">Тут можешь пост создать</a>
